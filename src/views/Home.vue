@@ -1,53 +1,39 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-    <!-- <VueRssFeed :feedUrl="feedUrl" :name="name" :limit="limit" /> -->
+  <div class="container">
+    <FeedItem v-for="(item, index) in feedItems" :key="index" :item="item" />
   </div>
 </template>
-
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
-//import VueRssFeed from "vue-rss-feed/src/VueRssFeed.vue";
+import { Feed, FeedItem } from "@/types/elements.types";
 import axios from "axios";
 
 @Component({
   components: {
-    HelloWorld,
+    FeedItem: async () => import("../components/FeedItem.vue"),
     //VueRssFeed,
   },
 })
 export default class Home extends Vue {
   //feedUrl = "https://dev98.de/feed/";
-  //name = "";
-  //limit = 5;
 
-  mounted() {
-    axios
-      .get("https://dev98.de/feed/", {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          //"Access-Control-Allow-Origin": "https://dev98.de/feed/",
-          "Content-Type": "application/rss+xml",
-          credentials: "include",
-          "Access-Control-Allow-Credentials": true,
-        },
-      })
+  feed: Feed = null as unknown as Feed;
+  feedItems: FeedItem[] = [];
+
+  async mounted() {
+    await axios
+      .get(
+        "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fdev98.de%2Ffeed%2F"
+      )
       .then((response) => {
         console.log(response);
+        console.log(response.data);
+        this.feed = response.data.feed;
+        this.feedItems = response.data.items;
       })
       .catch((error) => {
         console.log({ error });
       });
-
-    jQuery.getFeed({
-      url: "https://dev98.de/feed/",
-      success: function (feed) {
-        console.log(feed.title);
-        // do more stuff here
-      },
-    });
   }
 }
 </script>

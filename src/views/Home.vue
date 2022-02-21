@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div v-if="feed && feed.description" style="padding: 30px">
+      <h1>{{ feed.description }}</h1>
+    </div>
     <div class="grid-container">
       <BlogItem
         v-for="(item, index) in feedItems"
@@ -131,6 +134,7 @@ export default class Home extends Vue {
     let feed = await pars
       .parseURL(CORS_PROXY + "https://dev98.de/feed/")
       .then((responce) => {
+        console.log(responce);
         this.feed = {
           url: responce.feedUrl,
           description: responce.description,

@@ -19,8 +19,7 @@
     </div>
     <div>
       <p class="content">
-        {{ item.content }}
-        <!-- .slice(0, item.content.length - 20) -->
+        {{ item.content.substring(0, item.content.length - 20) }}
       </p>
     </div>
     <div class="card-footer">
@@ -124,7 +123,7 @@ $transition: all 0.3s;
 @mixin link {
   background-color: #93c5fd;
   color: white;
-  padding: 15px 20px;
+  padding: 10px 20px;
   border-radius: 15px;
   text-align: center;
   text-decoration: none;
